@@ -13,6 +13,42 @@ It runs entirely on your machine. The AI work is done by your local
 [Claude Code](https://claude.com/claude-code) CLI (`claude -p`), so no Anthropic API key is needed.
 Your photos, lessons and progress stay in a local folder.
 
+## A quick tour
+
+### Read, with a gloss under every word
+![Russian dialog in the Read view with full glosses](docs/screenshots/01-read-gloss.jpg)
+*A Russian textbook dialog, from a single phone photo of the page. **Gloss: full** puts the meaning, dictionary form
+and grammar (case, aspect, tense) under every word. Stress marks show where to put the accent, and each line has its own
+English translation. The key phrases on the right are highlighted in the text and can be marked as learned.*
+
+### Guided reading, one sentence at a time
+![Guided mode showing translation, word-by-word table, structure and a note](docs/screenshots/02-guided.jpg)
+*Guided mode steps through the reading sentence by sentence. Each sentence shows a natural and a literal translation,
+a word-by-word table, how the sentence is built, and a "Did you know?" note. Here it explains that новость, unlike English
+"news", can be counted. The dots track progress, and "Show all" is remembered between sentences.*
+
+### Works for advanced texts too
+![A C1 French newspaper article with glosses](docs/screenshots/03-french-gloss.jpg)
+*A C1-level Le Monde article, pasted as text. Articles, elisions (d', l') and contractions (du = de + le) are all glossed.
+The sidebar filters readings by language and shows each unit's generation cost and time.*
+
+### Right-to-left scripts: Arabic
+![Arabic news text with full vowel marks](docs/screenshots/04-arabic-vowels.jpg)
+*Arabic reads right to left in a larger sans-serif font. **Vowels** adds the full tashkeel to the printed text.*
+
+![Arabic text with transliteration and root/pattern glosses](docs/screenshots/05-arabic-gloss.jpg)
+*In gloss mode every Arabic word gets a transliteration, its meaning and its grammar: the root, verb form (Form III, Form VIII…),
+broken plurals, case, and iḍāfa constructions. Attached prefixes like و and ال are explained as part of the word.*
+
+### Vocabulary cards
+![Vocabulary tab with key phrase cards](docs/screenshots/06-vocabulary.jpg)
+*Every reading gets 15–35 key phrases and idioms, each with an explanation and fresh example sentences. You can
+filter them to what's left to learn. A glossary of every word in the text sits below.*
+
+### Culture notes
+![Notes tab with culture notes about the French article](docs/screenshots/07-culture-notes.jpg)
+*Background that makes the text make sense: the people, places and customs it mentions, plus notes on style and register.*
+
 ## Features
 
 - **Input**: multi-shot webcam capture (mirrored preview), photo upload, drag-and-drop, paste. Several pages plus pasted text become one reading.
