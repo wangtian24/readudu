@@ -31,7 +31,7 @@ Requirements: **Node.js 18+**, and **Claude Code** installed and logged in (`cla
 and `claude -p "hi"` should answer). There are no npm dependencies.
 
 ```bash
-git clone https://github.com/wangtian24/lang-learner.git readudu
+git clone https://github.com/wangtian24/readudu.git
 cd readudu
 cp env.example.yml env.yml     # then edit: add your ElevenLabs key, or set tts_provider: say
 npm start                      # → http://localhost:4321
