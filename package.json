@@ -3,5 +3,8 @@
   "version": "0.2.0",
   "private": true,
   "description": "Readudu — turn any foreign-language page or text into a guided reading unit, using local Claude Code (claude -p)",
-  "scripts": { "start": "node server.js" }
+  "scripts": {
+    "start": "node server.js"
+  },
+  "license": "MIT"
 }

@@ -145,3 +145,7 @@ OpenAI API with gpt-5 using my OPENAI_API_KEY"* or *"…switch text-to-speech to
 ## Status
 
 A personal learning tool, shared as-is. It is developed on macOS; other OSes should work, except for the `say` fallback.
+
+## License
+
+[MIT](LICENSE): free to use, modify and share.
