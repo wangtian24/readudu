@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Readudu">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e2553f"/>
+      <stop offset="1" stop-color="#b3261e"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="15" fill="url(#g)"/>
+  <!-- open book -->
+  <path d="M11 22c7-3 14-3 21 2v26c-7-5-14-5-21-2z" fill="#fff"/>
+  <path d="M53 22c-7-3-14-3-21 2v26c7-5 14-5 21-2z" fill="#fde7e2"/>
+  <!-- text lines -->
+  <path d="M16 29c4-1.2 7.5-.8 11 1M16 35c4-1.2 7.5-.8 11 1M16 41c4-1.2 7.5-.8 11 1" stroke="#e2553f" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+  <!-- speech bubble: the "du du" of reading aloud -->
+  <path d="M38 8h16a5 5 0 0 1 5 5v7a5 5 0 0 1-5 5h-9l-6 5v-5h-1a5 5 0 0 1-5-5v-7a5 5 0 0 1 5-5z" fill="#ffd166"/>
+  <circle cx="42.5" cy="16.5" r="2.2" fill="#7a2a12"/>
+  <circle cx="49.5" cy="16.5" r="2.2" fill="#7a2a12"/>
+</svg>

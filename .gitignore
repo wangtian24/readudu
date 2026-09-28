@@ -1,0 +1,8 @@
+# personal data: page photos, generated units, paid TTS clips, progress — stays local, never pushed
+data/
+*.tmp
+server.log
+.DS_Store
+
+# local config with secrets
+env.yml
