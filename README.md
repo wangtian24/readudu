@@ -20,8 +20,8 @@ Your photos, lessons and progress stay in a local folder.
   - **Gloss** mode puts the meaning (and optionally dictionary form, grammar and romanization) under every word.
   - **Colors** color-codes words by part of speech.
   - The reading aid shows **stress marks** for Russian and **furigana** for Japanese.
-- **Guided**: one sentence at a time. Reveal the translation (natural + literal), a word-by-word table, sentence structure, "Did you know?" anecdotes and inflection tables, and mark sentences as understood.
-- **Vocabulary / Grammar / Notes**: key phrases with learned tracking, a glossary of every word, grammar notes, conjugation and declension tables, culture notes.
+- **Guided**: one sentence at a time, with the translation (natural + literal), a word-by-word table, sentence structure, "Did you know?" anecdotes and inflection tables. Open sections one by one or turn on "Show all" (remembered), and mark sentences as understood.
+- **Vocabulary / Grammar / Notes**: key phrases with learned tracking, a glossary of every word, grammar notes, culture notes.
 - **Audio**: ElevenLabs (multilingual, two voices for dialog) or the macOS built-in voices. Every clip is generated once and cached.
 - **Cost-aware**: one `claude -p` call per reading, with live progress while it runs. The cost is shown for each unit. Results are cached and never regenerated unless you ask. Generations can be stopped.
 
@@ -63,7 +63,7 @@ Premium/Enhanced voices in *System Settings → Accessibility → Spoken Content
 ## Keyboard
 
 `T` English · `S` stress/furigana · `H` highlights · `G` gloss · `C` colors · `+`/`-` text size · `Esc` stop audio
-Guided: `←`/`→` move · `Space` reveal next · `Enter` got it + next · `R` listen. Camera: `Space` captures.
+Guided: `←`/`→` move · `Space` show all (remembered) · `Enter` got it + next · `R` listen. Camera: `Space` captures.
 
 ## Your data
 

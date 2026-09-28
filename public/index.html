@@ -41,6 +41,7 @@ h1 { font-size: 18px; margin: 0; }
 .lfilter button { font-size: 12px; padding: 2px 8px; border-radius: 99px; }
 .units .c { font-size: 11px; color: var(--muted); opacity: .75; margin-top: 1px; }
 .units .fl { font-size: 13px; margin-right: 4px; }
+.lbadge { display: inline-block; font: 600 9px/14px -apple-system, system-ui, sans-serif; letter-spacing: .03em; padding: 0 3px; border-radius: 3px; background: var(--line); color: var(--ink); vertical-align: 2px; }
 .units { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
 .units li { padding: 8px 10px; border-radius: 8px; cursor: pointer; }
 .units li:hover { background: var(--panel); }
@@ -275,7 +276,8 @@ let state = { showEn: false, showReading: true, lang: '', langFilter: 'all', hig
 let units = [], unit = null, view = 'unit'; // view: 'unit' | 'compose'
 let sel = null;              // {type:'word', s, w} | {type:'phrase', p}
 let revealedParas = new Set();
-let gIdx = 0, gOpen = new Set(); // guided: current sentence, opened sections
+let gIdx = 0, gOpen = new Set(), gClosed = new Set(); // guided: current sentence; per-sentence overrides of section visibility
+const secOpen = k => (state.guidedAll ? !gClosed.has(k) : gOpen.has(k));
 let vocabFilter = 'all';
 let draft = { images: [], text: '', hint: '' }; // composer draft (images = dataURLs)
 let pollTimer = null;
@@ -302,7 +304,7 @@ async function loadUnits() {
   units = await api('/api/units');
   const langs = [...new Set(units.map(u => u.language).filter(Boolean).map(langCode))];
   if (state.langFilter !== 'all' && !langs.includes(state.langFilter)) state.langFilter = 'all';
-  $('#lfilter').innerHTML = langs.length > 1 ? [['all', 'All'], ...langs.map(c => [c, `${LANGS[c].flag} ${LANGS[c].name}`])]
+  $('#lfilter').innerHTML = langs.length > 1 ? [['all', 'All'], ...langs.map(c => [c, `${langFlag(c)} ${esc(baseName(c))}`])]
     .map(([k, v]) => `<button data-lf="${k}" class="${state.langFilter === k ? 'on' : ''}">${v}</button>`).join('') : '';
   $('#units').innerHTML = units.filter(u => state.langFilter === 'all' || langCode(u.language) === state.langFilter).map(u => `
     <li data-id="${u.id}" class="${view === 'unit' && u.id === state.current ? 'active' : ''}">
@@ -325,11 +327,16 @@ async function loadUnits() {
     }, 2000);
   }
 }
-$('#units').onclick = e => { if (e.target.closest('[data-del]')) return; const li = e.target.closest('li'); if (li) openUnit(li.dataset.id); };
+$('#units').onclick = e => {
+  if (e.target.closest('[data-del]')) return;
+  const li = e.target.closest('li'); if (!li) return;
+  state.tab = 'read'; $('#main').scrollTop = 0;
+  openUnit(li.dataset.id);
+};
 
 async function openUnit(id, keep) {
   view = 'unit';
-  if (!keep || state.current !== id) { sel = null; revealedParas = new Set(); gOpen = new Set(); }
+  if (!keep || state.current !== id) { sel = null; revealedParas = new Set(); gOpen = new Set(); gClosed = new Set(); }
   if (state.current !== id) gIdx = prog(id).pos || 0;
   state.current = id; saveState();
   try { unit = await api('/api/units/' + id); } catch { unit = null; state.current = null; }
@@ -340,7 +347,7 @@ async function openUnit(id, keep) {
 
 /* ================= mechanical prep: tokens, phrase ranges, tables ================= */
 function prepare(u) {
-  u.lang = LANGS[langCode(u.language)] || LANGS.other;
+  u.lang = langConf(u.language);
   u.tableByLemma = {};
   (u.tables || []).forEach((t, i) => { u.tableByLemma[norm(t.lemma)] = i; });
   u.sentences.forEach(s => {
@@ -400,14 +407,24 @@ const LANGS = {
   pt: { name: 'Portuguese', flag: '🇧🇷', reading: null, label: 'Reading' },
   other: { name: 'Other', flag: '🌐', reading: 'ruby', label: 'Reading', translit: true },
 };
-const langCode = tag => { const c = String(tag || '').slice(0, 2).toLowerCase(); return LANGS[c] ? c : 'other'; };
+const FLAGS = { ru: '🇷🇺', ja: '🇯🇵', es: '🇪🇸', pt: '🇧🇷', fr: '🇫🇷', de: '🇩🇪', it: '🇮🇹', zh: '🇨🇳', ko: '🇰🇷', uk: '🇺🇦',
+  pl: '🇵🇱', nl: '🇳🇱', sv: '🇸🇪', no: '🇳🇴', nb: '🇳🇴', da: '🇩🇰', fi: '🇫🇮', tr: '🇹🇷', el: '🇬🇷', he: '🇮🇱', ar: '🇸🇦', hi: '🇮🇳',
+  vi: '🇻🇳', th: '🇹🇭', id: '🇮🇩', cs: '🇨🇿', hu: '🇭🇺', ro: '🇷🇴', fa: '🇮🇷', ka: '🇬🇪', en: '🇬🇧' };
+const REGION_FLAGS = { 'pt-PT': '🇵🇹', 'es-MX': '🇲🇽', 'es-AR': '🇦🇷', 'zh-TW': '🇹🇼', 'en-US': '🇺🇸', 'fr-CA': '🇨🇦' };
+// Base language code from a BCP-47 tag ("pt-BR" → "pt"); used for filtering and grouping.
+const langCode = tag => String(tag || '').toLowerCase().split(/[-_]/)[0] || '?';
+const langConf = tag => LANGS[langCode(tag)] || LANGS.other;
 const langName = tag => {
-  const c = langCode(tag);
-  if (c === 'pt') return /PT$/i.test(tag) ? 'Portuguese (PT)' : 'Portuguese (BR)';
-  if (c !== 'other') return LANGS[c].name;
-  try { return new Intl.DisplayNames(['en'], { type: 'language' }).of(tag); } catch { return tag || '?'; }
+  if (langCode(tag) === 'pt') return /PT$/i.test(tag) ? 'Portuguese (Portugal)' : 'Portuguese (Brazil)';
+  try { return new Intl.DisplayNames(['en'], { type: 'language' }).of(tag); } catch { return tag || 'Unknown'; }
 };
-const langFlag = tag => (langCode(tag) === 'pt' && /PT$/i.test(tag) ? '🇵🇹' : LANGS[langCode(tag)].flag);
+const baseName = code => { try { return new Intl.DisplayNames(['en'], { type: 'language' }).of(code); } catch { return code; } };
+// Flag emoji when we have one, otherwise a small letter badge (e.g. "FI").
+const langFlag = tag => {
+  const region = Object.keys(REGION_FLAGS).find(k => k.toLowerCase() === String(tag || '').toLowerCase());
+  const f = region ? REGION_FLAGS[region] : FLAGS[langCode(tag)];
+  return f || `<span class="lbadge">${esc(langCode(tag).toUpperCase())}</span>`;
+};
 
 function posClass(w) {
   const p = String(w?.pos || '').toLowerCase();
@@ -555,15 +572,14 @@ function guidedTab() {
     <div class="nav">
       <button id="gPrev" ${gIdx === 0 ? 'disabled' : ''}>← Prev</button>
       <button id="gSay">🔊 Listen</button>
-      <button id="gReveal">Reveal next <small>(Space)</small></button>
-      <button id="gAll">${secs.every(x => gOpen.has(x.k)) ? 'Hide all' : 'Show all'}</button>
+      <button id="gAll" class="${state.guidedAll ? 'on' : ''}" title="Keep every section open on all sentences (Space)">Show all</button>
       <button id="gDone" class="${has(done, gIdx) ? 'on' : ''}">${has(done, gIdx) ? '✓ Got it' : 'Got it'}</button>
       <button id="gNext" class="primary" ${gIdx === n - 1 ? 'disabled' : ''}>Next →</button>
       <span class="count">${gIdx + 1} / ${n} · ${done.length} understood</span>
     </div>
-    ${secs.map(sec => `<div class="sec ${gOpen.has(sec.k) ? '' : 'closed'}" data-sec="${sec.k}">
-      <div class="sh">${sec.t}<span class="k">${gOpen.has(sec.k) ? 'hide' : 'show'}</span></div>
-      <div class="sb">${gOpen.has(sec.k) ? body[sec.k](sec) : ''}</div></div>`).join('')}
+    ${secs.map(sec => `<div class="sec ${secOpen(sec.k) ? '' : 'closed'}" data-sec="${sec.k}">
+      <div class="sh">${sec.t}<span class="k">${secOpen(sec.k) ? 'hide' : 'show'}</span></div>
+      <div class="sb">${secOpen(sec.k) ? body[sec.k](sec) : ''}</div></div>`).join('')}
     <div class="ctx tl" style="margin-top:18px">${gIdx < n - 1 ? esc(unit.sentences[gIdx + 1].text) : ''}</div>
   </div>`;
 }
@@ -639,15 +655,12 @@ function grammarTab() {
   return `<div style="max-width:900px">${(unit.grammar || []).map(g => `<div class="card"><div class="ph" style="font-family:inherit;font-size:1.2rem">${esc(g.title)}</div>
       <p style="white-space:pre-wrap;margin:8px 0 0">${esc(g.body)}</p>
       ${g.examples?.length ? `<ul>${g.examples.map(x => `<li><span class="tl">${esc(x.text)}</span> <span class="ex-en">— ${esc(x.en)}</span></li>`).join('')}</ul>` : ''}</div>`).join('')}</div>
-    <h2 class="sect">Conjugation & declension tables</h2>
-    <div class="cols">${(unit.tables || []).map(tableHTML).join('')}</div>`;
+`;
 }
 function notesTab() {
-  const notes = unit.sentences.map((s, i) => ({ s, i })).filter(x => x.s.note);
   return `<div style="max-width:900px">
     ${(unit.culture || []).map(c => `<div class="card"><div class="ph" style="font-family:inherit;font-size:1.2rem">${esc(c.title)}</div><p style="white-space:pre-wrap;margin:8px 0 0">${esc(c.body)}</p></div>`).join('')}
-    <h2 class="sect">Sentence notes</h2>
-    ${notes.map(x => `<div class="card"><div class="tl" style="font-size:1.2rem;cursor:pointer" data-guide="${x.i}">${esc(x.s.text)} ›</div><div class="anec" style="margin-top:8px">${esc(x.s.note)}</div></div>`).join('')}
+    ${(unit.culture || []).length ? '' : '<p class="sub">No culture notes for this reading.</p>'}
   </div>`;
 }
 function sourceTab() {
@@ -860,11 +873,11 @@ document.addEventListener('click', async e => {
   if ((el = c('[data-sayt]'))) return speak(el.dataset.sayt);
   if ((el = c('[data-say-chunk]'))) { const [pi, ci] = el.dataset.sayChunk.split(':'); return speakAll(sentenceClips(unit.paras[pi].chunks[ci])); }
   if ((el = c('[data-en-chunk]'))) { const k = el.dataset.enChunk; revealedParas.has(k) ? revealedParas.delete(k) : revealedParas.add(k); return render(); }
-  if ((el = c('[data-guide]'))) { gIdx = +el.dataset.guide; gOpen.clear(); state.tab = 'guided'; saveState(); return render(); }
+  if ((el = c('[data-guide]'))) { gIdx = +el.dataset.guide; gOpen.clear(); gClosed.clear(); state.tab = 'guided'; saveState(); return render(); }
   if ((el = c('[data-learn]'))) { toggleIn('learned', +el.dataset.learn); return render(); }
   if ((el = c('[data-vf]'))) { vocabFilter = el.dataset.vf; return render(); }
   if ((el = c('[data-go]'))) return goSentence(+el.dataset.go);
-  if ((el = c('.sec > .sh'))) { const k = el.parentElement.dataset.sec; gOpen.has(k) ? gOpen.delete(k) : gOpen.add(k); return render(); }
+  if ((el = c('.sec > .sh'))) { const k = el.parentElement.dataset.sec, set = state.guidedAll ? gClosed : gOpen; set.has(k) ? set.delete(k) : set.add(k); return render(); }
   if ((el = c('.w[data-w], tr[data-w]')) && +el.dataset.w >= 0) {
     sel = { type: 'word', s: +el.dataset.s, w: +el.dataset.w };
     render(); $('#detail').scrollTo({ top: 0, behavior: 'smooth' }); return;
@@ -875,8 +888,7 @@ document.addEventListener('click', async e => {
     case 'gPrev': return goSentence(gIdx - 1);
     case 'gNext': return goSentence(gIdx + 1);
     case 'gSay': return speak(unit.sentences[gIdx].text, null, voiceFor(unit.sentences[gIdx].speaker));
-    case 'gReveal': return revealNext();
-    case 'gAll': { const secs = guidedSections(unit.sentences[gIdx]); const all = secs.every(x => gOpen.has(x.k)); gOpen = new Set(all ? [] : secs.map(x => x.k)); return render(); }
+    case 'gAll': state.guidedAll = !state.guidedAll; gOpen.clear(); gClosed.clear(); saveState(); return render();
     case 'gDone': toggleIn('done', gIdx); return render();
     case 'camBtn': return openCam();
     case 'fileBtn': return $('#fileIn').click();
@@ -901,13 +913,8 @@ async function deleteUnit(id) {
 }
 function goSentence(i) {
   if (!unit || i < 0 || i >= unit.sentences.length) return;
-  gIdx = i; gOpen.clear(); sel = null;
+  gIdx = i; gOpen.clear(); gClosed.clear(); sel = null;
   prog().pos = i; saveState(); render();
-}
-function revealNext() {
-  const secs = guidedSections(unit.sentences[gIdx]);
-  const nxt = secs.find(x => !gOpen.has(x.k));
-  if (nxt) { gOpen.add(nxt.k); render(); } else goSentence(gIdx + 1);
 }
 $('#fileIn').onchange = e => { addImages([...e.target.files]); e.target.value = ''; };
 
@@ -927,7 +934,7 @@ document.addEventListener('keydown', e => {
   else if (state.tab === 'guided') {
     if (k === 'ArrowRight') goSentence(gIdx + 1);
     else if (k === 'ArrowLeft') goSentence(gIdx - 1);
-    else if (k === ' ') { e.preventDefault(); revealNext(); }
+    else if (k === ' ') { e.preventDefault(); $('#gAll')?.click(); }
     else if (k === 'r') speak(unit.sentences[gIdx].text, null, voiceFor(unit.sentences[gIdx].speaker));
     else if (k === 'Enter') { if (!has(prog().done, gIdx)) toggleIn('done', gIdx); goSentence(gIdx + 1); }
     else return;
