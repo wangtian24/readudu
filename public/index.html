@@ -11,6 +11,7 @@
   --accent: #b3261e; --accent-soft: #fbe9e7; --hl: #fff1b8; --hl-ink: #5c4400; --learned: #d8efd9;
   --en: #365d8c; --ok: #2e7d32;
   --fs: 1; /* user font scale */
+  --tlz: 1; /* extra scale for scripts that read small at the same size (Arabic, Hebrew) */
   --tl-font: "PT Sans", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Helvetica Neue", Arial, sans-serif;
 }
 @media (prefers-color-scheme: dark) {
@@ -26,6 +27,10 @@ button.primary { background: var(--accent); border-color: var(--accent); color: 
 button.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 button:disabled { opacity: .5; cursor: default; }
 .tl { font-family: var(--tl-font); }
+/* Arabic-script and Hebrew readings: sans-serif fonts that support the script, set larger. */
+#app[data-lang=ar], #app[data-lang=fa], #app[data-lang=ur] { --tl-font: "SF Arabic", "Geeza Pro", "Noto Sans Arabic", "Segoe UI", Tahoma, sans-serif; --tlz: 1.3; }
+#app[data-lang=he] { --tl-font: "SF Hebrew", "Arial Hebrew", "Noto Sans Hebrew", "Segoe UI", sans-serif; --tlz: 1.15; }
+[dir=rtl] .tl, .tl[dir=rtl] { line-height: 1.8; }
 .app { display: grid; grid-template-columns: 250px 1fr 400px; height: 100vh; }
 .app.no-detail { grid-template-columns: 250px 1fr; }
 .app.no-detail .detail { display: none; }
@@ -55,25 +60,25 @@ h1 { font-size: 18px; margin: 0; }
 .units .x:hover { opacity: 1; color: var(--accent); }
 
 /* header + tabs */
-/* Header: fixed pixel sizes, fixed heights and fixed-width controls so nothing moves. */
-.head { position: sticky; top: 0; z-index: 3; background: var(--bg); border-bottom: 1px solid var(--line); margin: 0 -40px 20px; padding: 0 40px; font-size: 14px; line-height: 20px; }
-.head button { font-size: 13px; line-height: 18px; }
-.head .row1 { display: flex; align-items: center; gap: 16px; height: 44px; }
-.head .ttl { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 8px; white-space: nowrap; overflow: hidden; }
-.head .ttl .tl { font-size: 19px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; flex-shrink: 1; min-width: 0; }
-.head .ttl .en { color: var(--muted); font-size: 13px; overflow: hidden; text-overflow: ellipsis; flex-shrink: 2; min-width: 0; }
-.level { font-size: 11px; line-height: 16px; background: var(--accent-soft); color: var(--accent); padding: 1px 7px; border-radius: 99px; flex-shrink: 0; }
-.tabs { display: flex; flex-shrink: 0; height: 44px; }
-.tabs .tab { border: none; border-bottom: 2px solid transparent; border-radius: 0; background: none; padding: 0 10px; color: var(--muted); height: 44px; }
+/* Header: three compact rows with fixed pixel sizes and fixed-width controls, so nothing moves. */
+.head { position: sticky; top: 0; z-index: 3; background: var(--bg); border-bottom: 1px solid var(--line); margin: 0 -40px 16px; padding: 0 40px; font-size: 13px; line-height: 18px; }
+.head .row1 { display: flex; align-items: center; gap: 8px; height: 36px; white-space: nowrap; overflow: hidden; }
+.head .row1 .tl { font-size: 18px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex-shrink: 1; }
+.head .row1 .en { color: var(--muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex-shrink: 3; }
+.level { font-size: 10.5px; line-height: 15px; background: var(--accent-soft); color: var(--accent); padding: 1px 6px; border-radius: 99px; flex-shrink: 0; max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tabs { display: flex; height: 26px; gap: 2px; }
+.tabs .tab { border: none; border-bottom: 2px solid transparent; border-radius: 0; background: none; padding: 0 8px; color: var(--muted); height: 26px; font-size: 12px; line-height: 16px; }
 .tabs .tab.active { color: var(--ink); border-bottom-color: var(--accent); }
-.tools { display: flex; align-items: center; gap: 6px; height: 40px; }
-.tools button { height: 28px; padding: 0 8px; border-radius: 6px; white-space: nowrap; text-align: center; }
-.tools .t-en { width: 72px; } .tools .t-stress { width: 80px; } .tools .t-hl { width: 84px; }
-.tools .t-gloss { width: 118px; } .tools .t-col { width: 64px; } .tools .t-slow { width: 56px; }
-.tools .t-play { width: 76px; } .tools .t-fs { width: 34px; padding: 0; }
-.tools .fs-val { width: 40px; text-align: center; color: var(--muted); font-size: 12px; }
+.tools { display: flex; align-items: center; gap: 4px; height: 32px; }
+.tools button { height: 22px; padding: 0 5px; border-radius: 5px; white-space: nowrap; text-align: center; font-size: 11px; line-height: 14px; }
+.tools .t-en { width: 50px; } .tools .t-stress { width: 58px; } .tools .t-hl { width: 64px; }
+.tools .t-gloss { width: 94px; } .tools .t-col { width: 46px; } .tools .t-slow { width: 36px; }
+.tools .playslot { display: flex; gap: 3px; width: 92px; }
+.tools .playslot button { flex: 1; padding: 0; }
+.tools .t-fs { width: 24px; padding: 0; }
+.tools .fs-val { width: 32px; text-align: center; color: var(--muted); font-size: 11px; }
 .tools .sep { flex: 1; }
-@media (max-width: 1150px) { .head { margin: 0 -16px 16px; padding: 0 16px; } .head .row1 { height: auto; flex-wrap: wrap; } .tools { height: auto; flex-wrap: wrap; padding: 6px 0; } }
+@media (max-width: 1150px) { .head { margin: 0 -16px 16px; padding: 0 16px; } .tools { height: auto; flex-wrap: wrap; padding: 5px 0; } }
 
 /* tokens */
 .w { cursor: pointer; border-radius: 3px; }
@@ -91,9 +96,9 @@ h1 { font-size: 18px; margin: 0; }
 .chunk { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: start; padding: 4px 8px; margin: -4px -8px; border-radius: 8px; }
 .chunk:hover { background: var(--panel); }
 .para .who { font-weight: 700; color: var(--accent); text-align: right; padding-top: .35rem; }
-.para .tl { font-size: 1.6rem; line-height: 1.6; }
-.para.heading .tl { font-size: 1.9rem; font-weight: 700; }
-.para.note .tl { font-style: italic; color: var(--muted); font-size: 1.3rem; }
+.para .tl { font-size: calc(1.6rem * var(--tlz)); line-height: 1.6; }
+.para.heading .tl { font-size: calc(1.9rem * var(--tlz)); font-weight: 700; }
+.para.note .tl { font-style: italic; color: var(--muted); font-size: calc(1.3rem * var(--tlz)); }
 .para .en { color: var(--en); font-size: 1rem; margin-top: 4px; }
 .para .acts { display: flex; gap: 2px; padding-top: .3rem; opacity: .6; }
 .chunk:hover .acts { opacity: 1; }
@@ -108,10 +113,10 @@ h1 { font-size: 18px; margin: 0; }
 .dots span { width: 14px; height: 14px; border-radius: 4px; background: var(--line); cursor: pointer; }
 .dots span.done { background: var(--ok); opacity: .6; }
 .dots span.cur { outline: 2px solid var(--accent); outline-offset: 1px; }
-.ctx { color: var(--muted); font-size: 1.15rem; opacity: .6; min-height: 1.6em; }
+.ctx { color: var(--muted); font-size: calc(1.15rem * var(--tlz)); opacity: .6; min-height: 1.6em; }
 .focus { margin: 14px 0 18px; }
 .focus .who { color: var(--accent); font-weight: 700; font-size: .95rem; }
-.focus .tl { font-size: 2.3rem; line-height: 1.45; }
+.focus .tl { font-size: calc(2.3rem * var(--tlz)); line-height: 1.45; }
 .nav { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 18px; }
 .nav .count { color: var(--muted); font-size: .85rem; margin-left: auto; }
 .sec { border: 1px solid var(--line); border-radius: 12px; margin-bottom: 12px; background: var(--panel); }
@@ -123,7 +128,7 @@ h1 { font-size: 18px; margin: 0; }
 .sec .lit { color: var(--muted); margin-top: 6px; }
 table.words { border-collapse: collapse; width: 100%; font-size: .95rem; }
 table.words td { padding: 6px 8px; border-top: 1px solid var(--line); vertical-align: top; }
-table.words td:first-child { font-family: var(--tl-font); font-size: 1.15rem; font-weight: 600; white-space: nowrap; }
+table.words td:first-child { font-family: var(--tl-font); font-size: calc(1.15rem * var(--tlz)); font-weight: 600; white-space: nowrap; }
 table.words .lemma { font-family: var(--tl-font); }
 table.words .form { color: var(--muted); font-size: .85rem; }
 table.words tr { cursor: pointer; }
@@ -134,17 +139,17 @@ table.words tr:hover td { background: var(--bg); }
 .card { border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 12px; background: var(--bg); }
 .detail .card { background: var(--bg); }
 main .card { background: var(--panel); }
-.card .ph { font-size: 1.5rem; font-weight: 700; font-family: var(--tl-font); }
+.card .ph { font-size: calc(1.5rem * var(--tlz)); font-weight: 700; font-family: var(--tl-font); }
 .card .sub { color: var(--muted); font-size: .9rem; }
 .card .gl { color: var(--en); margin: 4px 0 8px; font-size: 1.05rem; }
 .card .cat { font-size: .7rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
 .card ul { padding-left: 20px; margin: 8px 0 0; }
-.card li .tl { font-size: 1.05rem; }
+.card li .tl { font-size: calc(1.05rem * var(--tlz)); }
 .ex-en { color: var(--muted); }
 .grid { border-collapse: collapse; margin-top: 8px; font-size: .95rem; }
 .grid th, .grid td { border: 1px solid var(--line); padding: 4px 10px; text-align: left; }
 .grid th { background: var(--bg); font-weight: 600; font-size: .8rem; color: var(--muted); }
-.grid td { font-family: var(--tl-font); font-size: 1.05rem; }
+.grid td { font-family: var(--tl-font); font-size: calc(1.05rem * var(--tlz)); }
 .cols { columns: 2 380px; column-gap: 14px; }
 .cols .card { break-inside: avoid; }
 h2.sect { font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 28px 0 12px; }
@@ -152,7 +157,7 @@ h2.sect { font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; co
 .plist { list-style: none; padding: 0; margin: 0; }
 .plist li { display: flex; gap: 10px; align-items: baseline; padding: 7px 4px; border-bottom: 1px solid var(--line); cursor: pointer; }
 .plist li:hover { background: var(--bg); }
-.plist li b { font-family: var(--tl-font); font-size: 1.1rem; }
+.plist li b { font-family: var(--tl-font); font-size: calc(1.1rem * var(--tlz)); }
 .plist li span { color: var(--muted); flex: 1; font-size: .9rem; }
 .plist li.learned b { text-decoration: line-through; opacity: .6; }
 .plist li .n { flex: 0; color: var(--muted); font-size: .75rem; }
@@ -171,7 +176,7 @@ h2.sect { font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; co
 .tray .add-tile { border: 2px dashed var(--line); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-height: 220px; color: var(--muted); }
 select.sel { font: inherit; padding: 8px; border-radius: 8px; background: var(--panel); color: var(--ink); border: 1px solid var(--line); min-width: 280px; }
 textarea, input[type=text] { width: 100%; font: inherit; color: inherit; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
-textarea { min-height: 200px; font-family: var(--tl-font); font-size: 1.2rem; resize: vertical; }
+textarea { min-height: 200px; font-family: var(--tl-font); font-size: calc(1.2rem * var(--tlz)); resize: vertical; }
 label.lb { display: block; font-weight: 600; margin: 20px 0 6px; }
 .empty { color: var(--muted); max-width: 560px; margin: 80px auto; text-align: center; }
 .spinner { width: 30px; height: 30px; border: 3px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
@@ -182,10 +187,9 @@ label.lb { display: block; font-weight: 600; margin: 20px 0 6px; }
 .steps span.cur { border-color: var(--accent); color: var(--accent); font-weight: 600; }
 .pbar { height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; margin: 8px auto; max-width: 420px; }
 .pbar div { height: 100%; background: var(--accent); transition: width .6s; }
-#playerBar { position: fixed; bottom: 20px; right: 20px; z-index: 10; box-shadow: 0 4px 16px rgba(0,0,0,.25); border-radius: 99px; padding: 10px 18px; }
 .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: 10px; z-index: 10; font-size: .9rem; }
 .page-img { max-width: 100%; border-radius: 8px; margin: 8px 0; border: 1px solid var(--line); }
-pre.src { white-space: pre-wrap; font-family: var(--tl-font); font-size: 1.2rem; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
+pre.src { white-space: pre-wrap; font-family: var(--tl-font); font-size: calc(1.2rem * var(--tlz)); background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
 
 dialog { border: none; border-radius: 14px; padding: 0; background: var(--panel); color: var(--ink); width: min(1000px, 96vw); }
 dialog::backdrop { background: rgba(0,0,0,.65); }
@@ -309,7 +313,7 @@ async function loadUnits() {
   $('#units').innerHTML = units.filter(u => state.langFilter === 'all' || langCode(u.language) === state.langFilter).map(u => `
     <li data-id="${u.id}" class="${view === 'unit' && u.id === state.current ? 'active' : ''}">
       <button class="x" data-del="${u.id}" title="Delete">✕</button>
-      <div class="t">${u.language ? `<span class="fl" title="${esc(langName(u.language))}">${langFlag(u.language)}</span>` : ''}${esc(u.title || (u.status === 'error' ? 'Failed' : 'Reading…'))}</div>
+      <div class="t">${u.language ? `<span class="fl" title="${esc(langName(u.language))}">${langFlag(u.language)}</span>` : ''}<span dir="auto">${esc(u.title || (u.status === 'error' ? 'Failed' : 'Reading…'))}</span></div>
       <div class="s ${u.status === 'error' ? 'err' : ''}">${
         u.status === 'ready' ? esc([u.title_en, u.level, `${u.sentences} sent.`].filter(Boolean).join(' · '))
         : u.status === 'error' ? 'Failed — open to retry'
@@ -405,15 +409,22 @@ const LANGS = {
   ja: { name: 'Japanese', flag: '🇯🇵', reading: 'ruby', label: 'Furigana', translit: true },
   es: { name: 'Spanish', flag: '🇪🇸', reading: null, label: 'Reading' },
   pt: { name: 'Portuguese', flag: '🇧🇷', reading: null, label: 'Reading' },
+  ar: { translitInMeaning: true, name: 'Arabic', reading: 'inline', label: 'Vowels', translit: true, dir: 'rtl' },
+  he: { translitInMeaning: true, name: 'Hebrew', reading: 'inline', label: 'Niqqud', translit: true, dir: 'rtl' },
+  fa: { translitInMeaning: true, name: 'Persian', reading: 'inline', label: 'Vowels', translit: true, dir: 'rtl' },
+  ur: { translitInMeaning: true, name: 'Urdu', reading: 'inline', label: 'Vowels', translit: true, dir: 'rtl' },
   other: { name: 'Other', flag: '🌐', reading: 'ruby', label: 'Reading', translit: true },
 };
+const RTL = new Set(['ar', 'he', 'fa', 'ur', 'ps', 'yi', 'ug', 'dv', 'sd', 'ckb']);
 const FLAGS = { ru: '🇷🇺', ja: '🇯🇵', es: '🇪🇸', pt: '🇧🇷', fr: '🇫🇷', de: '🇩🇪', it: '🇮🇹', zh: '🇨🇳', ko: '🇰🇷', uk: '🇺🇦',
   pl: '🇵🇱', nl: '🇳🇱', sv: '🇸🇪', no: '🇳🇴', nb: '🇳🇴', da: '🇩🇰', fi: '🇫🇮', tr: '🇹🇷', el: '🇬🇷', he: '🇮🇱', ar: '🇸🇦', hi: '🇮🇳',
   vi: '🇻🇳', th: '🇹🇭', id: '🇮🇩', cs: '🇨🇿', hu: '🇭🇺', ro: '🇷🇴', fa: '🇮🇷', ka: '🇬🇪', en: '🇬🇧' };
 const REGION_FLAGS = { 'pt-PT': '🇵🇹', 'es-MX': '🇲🇽', 'es-AR': '🇦🇷', 'zh-TW': '🇹🇼', 'en-US': '🇺🇸', 'fr-CA': '🇨🇦' };
 // Base language code from a BCP-47 tag ("pt-BR" → "pt"); used for filtering and grouping.
 const langCode = tag => String(tag || '').toLowerCase().split(/[-_]/)[0] || '?';
-const langConf = tag => LANGS[langCode(tag)] || LANGS.other;
+const langConf = tag => LANGS[langCode(tag)] || (RTL.has(langCode(tag)) ? { ...LANGS.other, reading: 'inline', dir: 'rtl', translitInMeaning: true } : LANGS.other);
+// dir attribute for blocks of target-language text (sentences); smaller bits use dir="auto".
+const tlDir = () => (unit?.lang?.dir === 'rtl' ? ' dir="rtl"' : '');
 const langName = tag => {
   if (langCode(tag) === 'pt') return /PT$/i.test(tag) ? 'Portuguese (Portugal)' : 'Portuguese (Brazil)';
   try { return new Intl.DisplayNames(['en'], { type: 'language' }).of(tag); } catch { return tag || 'Unknown'; }
@@ -441,10 +452,14 @@ function readingHTML(tok, w) {
   const mode = unit?.lang?.reading;
   if (!r || !mode || !state.showReading) return esc(tok);
   if (mode === 'inline') {
-    if (!r.includes(ACUTE) || r.replaceAll(ACUTE, '').toLowerCase() !== tok.toLowerCase()) return esc(tok);
+    // reading = the same word plus combining marks. Keep the printed letters (case) and take the marks from reading.
+    const R = r.normalize('NFD'), T = tok.normalize('NFD'), MARK = /\p{M}/u;
+    const baseT = [...T].filter(c => !MARK.test(c));
+    const baseR = [...R].filter(c => !MARK.test(c));
+    if (baseR.join('').toLowerCase() !== baseT.join('').toLowerCase() || R === T) return esc(tok);
     let out = '', k = 0;
-    for (const ch of r) out += ch === ACUTE ? ACUTE : tok[k++];
-    return esc(out);
+    for (const c of R) out += MARK.test(c) ? c : baseT[k++];
+    return esc(out.normalize('NFC'));
   }
   if (!KANJI.test(tok) || r === tok) return esc(tok);
   // Put furigana only over the kanji part: strip kana shared at the start/end (okurigana).
@@ -466,8 +481,8 @@ function sentenceHTML(si) {
     const text = readingHTML(t.t, w);
     const isSel = sel?.type === 'word' && sel.s === si && sel.w === t.wi && t.wi >= 0;
     const inner = g && w
-      ? `<span class="gw">${text}</span>${unit.lang.translit && w.translit && state.gloss === 'full' ? `<span class="gt">${esc(w.translit)}</span>` : ''}<span class="ge">${esc(w.en)}</span>${state.gloss === 'full'
-          ? `<span class="gf">${norm(w.lemma) !== norm(w.text) ? `<b>${esc(w.lemma)}</b> · ` : ''}${esc(w.form || w.pos)}</span>` : ''}`
+      ? `<span class="gw">${text}</span>${unit.lang.translit && w.translit && (state.gloss === 'full' || unit.lang.translitInMeaning) ? `<span class="gt" dir="ltr">${esc(w.translit)}</span>` : ''}<span class="ge" dir="ltr">${esc(w.en)}</span>${state.gloss === 'full'
+          ? `<span class="gf" dir="ltr">${norm(w.lemma) !== norm(w.text) ? `<b><bdi>${esc(w.lemma)}</bdi></b> · ` : ''}${esc(w.form || w.pos)}</span>` : ''}`
       : text;
     return `<span class="w${g && w ? ' g' : ''} ${w ? posClass(w) : ''}${kp}${isSel ? ' sel' : ''}" data-s="${si}" data-w="${t.wi}"${r ? ` data-p="${r.pi}"` : ''}>${inner}</span>`;
   }).join('');
@@ -477,6 +492,7 @@ function sentenceHTML(si) {
 function render() {
   applyFont();
   const app = $('#app');
+  delete app.dataset.lang;
   if (view === 'compose') { app.classList.add('no-detail'); return renderComposer(); }
   if (!unit) {
     app.classList.add('no-detail');
@@ -486,6 +502,7 @@ function render() {
       <p><button class="primary" onclick="compose()">＋ New reading</button></p></div>`;
     return;
   }
+  app.dataset.lang = langCode(unit.language);
   if (unit.status !== 'ready') { app.classList.add('no-detail'); return renderPending(); }
   const showDetail = true; // keep the 3-column layout identical on every tab
   app.classList.remove('no-detail');
@@ -493,13 +510,11 @@ function render() {
   const tabs = [['read', 'Read'], ['guided', 'Guided'], ['vocab', 'Vocabulary'], ['grammar', 'Grammar'], ['notes', 'Notes'], ['source', 'Source']];
   $('#main').innerHTML = `
     <div class="head">
-      <div class="row1">
-        <div class="ttl" title="${esc(unit.title)} — ${esc(unit.title_en)}">
-          <span class="tl">${esc(unit.title)}</span><span class="en">${esc(unit.title_en)}</span>
-          ${unit.level ? `<span class="level">${esc(unit.level)}</span>` : ''}
-        </div>
-        <div class="tabs">${tabs.map(([k, v]) => `<button class="tab ${state.tab === k ? 'active' : ''}" data-tab="${k}">${v}</button>`).join('')}</div>
+      <div class="row1" title="${esc(unit.title)} — ${esc(unit.title_en)}">
+        <span class="tl" dir="auto">${esc(unit.title)}</span><span class="en">${esc(unit.title_en)}</span>
+        ${unit.level ? `<span class="level" title="${esc(unit.level)}">${esc(unit.level)}</span>` : ''}
       </div>
+      <div class="tabs">${tabs.map(([k, v]) => `<button class="tab ${state.tab === k ? 'active' : ''}" data-tab="${k}">${v}</button>`).join('')}</div>
       <div class="tools">
         <button data-tog="showEn" class="t-en ${state.showEn ? 'on' : ''}" title="English translation (T)">English</button>
         <button data-tog="showReading" class="t-stress ${state.showReading && unit.lang.reading ? 'on' : ''}" title="${unit.lang.reading ? unit.lang.label : 'No reading aid needed for this language'} (S)" ${unit.lang.reading ? '' : 'disabled'}>${unit.lang.label}</button>
@@ -507,13 +522,14 @@ function render() {
         <button id="glossBtn" class="t-gloss ${state.gloss !== 'off' ? 'on' : ''}" title="Word glosses: off → meaning → meaning + form (G)">Gloss: ${({ off: 'off', meaning: 'meaning', full: 'full' })[state.gloss]}</button>
         <button data-tog="posColor" class="t-col ${state.posColor ? 'on' : ''}" title="Color by part of speech (C)">Colors</button>
         <span class="sep"></span>
-        <button id="playAll" class="t-play" title="Play whole text">${playing ? '■ Stop' : '▶ Play'}</button>
+        <span class="playslot" id="playslot">${playSlotHTML()}</span>
         <button data-tog="slowAudio" class="t-slow ${state.slowAudio ? 'on' : ''}" title="Slow playback">Slow</button>
         <button id="fsDown" class="t-fs" title="Smaller text (-)">A−</button><span class="fs-val">${Math.round(state.fontScale * 100)}%</span><button id="fsUp" class="t-fs" title="Bigger text (+)">A+</button>
       </div>
     </div>
     <div id="tabBody" class="${state.highlight ? '' : 'hl-off'} ${state.gloss !== 'off' ? 'gloss' : ''} ${state.posColor ? 'colors' : ''}">${state.posColor && ['read', 'guided'].includes(state.tab) ? `<div class="legend">${LEGEND.map(([k, v]) => `<span class="pos-${k}">${v}</span>`).join('')}</div>` : ''}${({ read: readTab, guided: guidedTab, vocab: vocabTab, grammar: grammarTab, notes: notesTab, source: sourceTab })[state.tab]()}</div>`;
   if (showDetail) renderDetail();
+  updateAudioUI();
 }
 
 function readTab() {
@@ -529,7 +545,7 @@ function readTab() {
         const showEn = state.showEn || revealedParas.has(key);
         return `<div class="chunk">
           <div>
-            <div class="tl">${ch.map(si => `<span class="sent ${has(done, si) ? 'done' : ''}">${sentenceHTML(si)}</span>`).join(' ')}</div>
+            <div class="tl"${tlDir()}>${ch.map(si => `<span class="sent ${has(done, si) ? 'done' : ''}">${sentenceHTML(si)}</span>`).join(' ')}</div>
             ${showEn ? `<div class="en">${esc(ch.map(si => unit.sentences[si].en).join(' '))}</div>` : ''}
           </div>
           <div class="acts">
@@ -555,7 +571,7 @@ function guidedTab() {
   const body = {
     en: () => `<div class="big-en">${esc(s.en)}</div>${s.literal ? `<div class="lit">Literally: ${esc(s.literal)}</div>` : ''}`,
     words: () => `<table class="words">${s.words.map((w, wi) => `<tr data-s="${gIdx}" data-w="${wi}">
-        <td class="${posClass(w)}">${readingHTML(w.text, w)}${w.translit && unit.lang.translit ? `<div class="form">${esc(w.translit)}</div>` : ''}</td>
+        <td class="${posClass(w)}" dir="auto">${readingHTML(w.text, w)}${w.translit && unit.lang.translit ? `<div class="form">${esc(w.translit)}</div>` : ''}</td>
         <td><span class="lemma">${esc(w.lemma)}</span><div class="form">${esc(w.pos)}${w.form ? ' · ' + esc(w.form) : ''}</div></td>
         <td>${esc(w.en)}</td></tr>`).join('')}</table>`,
     structure: () => `<div>${esc(s.structure)}</div>`,
@@ -564,10 +580,10 @@ function guidedTab() {
   };
   return `<div class="guided">
     <div class="dots">${unit.sentences.map((_, i) => `<span data-go="${i}" class="${has(done, i) ? 'done' : ''} ${i === gIdx ? 'cur' : ''}" title="${i + 1}"></span>`).join('')}</div>
-    <div class="ctx tl">${gIdx > 0 ? esc(unit.sentences[gIdx - 1].text) : ''}</div>
+    <div class="ctx tl"${tlDir()}>${gIdx > 0 ? esc(unit.sentences[gIdx - 1].text) : ''}</div>
     <div class="focus">
       ${s.speaker ? `<div class="who">${esc(s.speaker)}</div>` : ''}
-      <div class="tl">${sentenceHTML(gIdx)}</div>
+      <div class="tl"${tlDir()}>${sentenceHTML(gIdx)}</div>
     </div>
     <div class="nav">
       <button id="gPrev" ${gIdx === 0 ? 'disabled' : ''}>← Prev</button>
@@ -580,7 +596,7 @@ function guidedTab() {
     ${secs.map(sec => `<div class="sec ${secOpen(sec.k) ? '' : 'closed'}" data-sec="${sec.k}">
       <div class="sh">${sec.t}<span class="k">${secOpen(sec.k) ? 'hide' : 'show'}</span></div>
       <div class="sb">${secOpen(sec.k) ? body[sec.k](sec) : ''}</div></div>`).join('')}
-    <div class="ctx tl" style="margin-top:18px">${gIdx < n - 1 ? esc(unit.sentences[gIdx + 1].text) : ''}</div>
+    <div class="ctx tl"${tlDir()} style="margin-top:18px">${gIdx < n - 1 ? esc(unit.sentences[gIdx + 1].text) : ''}</div>
   </div>`;
 }
 
@@ -588,19 +604,19 @@ function tableHTML(t) {
   if (!t) return '';
   return `<div class="card"><div class="cat">${esc(t.kind || '')}</div><div class="ph">${esc(t.title)}</div>
     <table class="grid">${t.columns?.length ? `<tr>${t.columns.map(c => `<th>${esc(c)}</th>`).join('')}</tr>` : ''}
-    ${t.rows.map(r => `<tr>${r.map((c, i) => i === 0 && t.columns?.length ? `<th>${esc(c)}</th>` : `<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</table>
+    ${t.rows.map(r => `<tr>${r.map((c, i) => i === 0 && t.columns?.length ? `<th>${esc(c)}</th>` : `<td dir="auto">${esc(c)}</td>`).join('')}</tr>`).join('')}</table>
     ${t.note ? `<div class="sub" style="margin-top:8px">${esc(t.note)}</div>` : ''}</div>`;
 }
 function phraseCard(pi) {
   const p = unit.phrases[pi], learned = has(prog().learned, pi);
   return `<div class="card">
     <div class="cat">${esc(p.category || '')}</div>
-    <div class="ph">${esc(p.text)} <button class="icon" data-sayt="${esc(p.text)}">🔊</button></div>
+    <div class="ph"><span dir="auto">${esc(p.text)}</span> <button class="icon" data-sayt="${esc(p.text)}">🔊</button></div>
     ${p.reading && norm(p.reading) !== norm(p.text) ? `<div class="sub">${esc(p.reading)}</div>` : ''}
     ${p.lemma && norm(p.lemma) !== norm(p.text) ? `<div class="sub tl">${esc(p.lemma)}</div>` : ''}
     <div class="gl">${esc(p.en)}</div>
     <div>${esc(p.explanation)}</div>
-    ${p.examples?.length ? `<ul>${p.examples.map(x => `<li><span class="tl">${esc(x.text)}</span> <span class="ex-en">— ${esc(x.en)}</span></li>`).join('')}</ul>` : ''}
+    ${p.examples?.length ? `<ul>${p.examples.map(x => `<li><span class="tl" dir="auto">${esc(x.text)}</span> <span class="ex-en">— ${esc(x.en)}</span></li>`).join('')}</ul>` : ''}
     <div style="margin-top:12px"><button data-learn="${pi}" class="${learned ? 'on' : ''}">${learned ? '✓ Learned' : 'Mark as learned'}</button></div>
   </div>`;
 }
@@ -612,11 +628,11 @@ function wordCard(si, wi) {
   const ti = unit.tableByLemma[norm(w.lemma)];
   return `<div class="card">
       <div class="cat">${esc(w.pos)}</div>
-      <div class="ph">${readingHTML(w.text, w)} <button class="icon" data-sayt="${esc(w.text)}">🔊</button></div>
+      <div class="ph"><span dir="auto">${readingHTML(w.text, w)}</span> <button class="icon" data-sayt="${esc(w.text)}">🔊</button></div>
       ${w.reading && unit.lang.reading === 'ruby' ? `<div class="sub">${esc(w.reading)}${w.translit ? ' · ' + esc(w.translit) : ''}</div>` : w.translit && unit.lang.translit ? `<div class="sub">${esc(w.translit)}</div>` : ''}
-      <div class="sub">from <span class="tl" style="font-size:1.1rem;color:var(--ink)">${esc(w.lemma)}</span></div>
+      <div class="sub">from <span class="tl" dir="auto" style="font-size:1.1rem;color:var(--ink)">${esc(w.lemma)}</span></div>
       <div class="gl">${esc(w.en)}</div>
-      ${w.form ? `<div>${esc(w.form)}</div>` : ''}
+      ${w.form ? `<div dir="ltr">${esc(w.form).replace(/([\u0590-\u08ff]+(?:[\s\u0590-\u08ff]*[\u0590-\u08ff])?)/g, '<bdi>$1</bdi>')}</div>` : ''}
     </div>
     ${phrases.map(phraseCard).join('')}
     ${ti != null ? tableHTML(unit.tables[ti]) : ''}`;
@@ -629,7 +645,7 @@ function renderDetail() {
   else top = `<div class="card sub">Click any word for its dictionary form, grammar and meaning. Highlighted words are key phrases.</div>`;
   d.innerHTML = `${top}
     <h2 class="sect">Key phrases · ${L.length}/${unit.phrases.length} learned</h2>
-    <ul class="plist">${unit.phrases.map((p, i) => `<li data-p="${i}" class="${has(L, i) ? 'learned' : ''}"><b>${esc(p.text)}</b><span>${esc(p.en)}</span></li>`).join('')}</ul>`;
+    <ul class="plist">${unit.phrases.map((p, i) => `<li data-p="${i}" class="${has(L, i) ? 'learned' : ''}"><b class="tl" dir="auto">${esc(p.text)}</b><span>${esc(p.en)}</span></li>`).join('')}</ul>`;
 }
 
 function vocabTab() {
@@ -649,12 +665,12 @@ function vocabTab() {
     </div>
     <div class="cols">${list.map(phraseCard).join('')}</div>
     <h2 class="sect">Glossary · ${rows.length} words</h2>
-    <table class="words" style="max-width:900px">${rows.map(g => `<tr><td>${esc(g.lemma)}</td><td class="form">${esc(g.pos)}${g.n > 1 ? ` · ×${g.n}` : ''}</td><td>${esc([...g.en].join('; '))}</td></tr>`).join('')}</table>`;
+    <table class="words" style="max-width:900px">${rows.map(g => `<tr><td dir="auto">${esc(g.lemma)}</td><td class="form">${esc(g.pos)}${g.n > 1 ? ` · ×${g.n}` : ''}</td><td>${esc([...g.en].join('; '))}</td></tr>`).join('')}</table>`;
 }
 function grammarTab() {
   return `<div style="max-width:900px">${(unit.grammar || []).map(g => `<div class="card"><div class="ph" style="font-family:inherit;font-size:1.2rem">${esc(g.title)}</div>
       <p style="white-space:pre-wrap;margin:8px 0 0">${esc(g.body)}</p>
-      ${g.examples?.length ? `<ul>${g.examples.map(x => `<li><span class="tl">${esc(x.text)}</span> <span class="ex-en">— ${esc(x.en)}</span></li>`).join('')}</ul>` : ''}</div>`).join('')}</div>
+      ${g.examples?.length ? `<ul>${g.examples.map(x => `<li><span class="tl" dir="auto">${esc(x.text)}</span> <span class="ex-en">— ${esc(x.en)}</span></li>`).join('')}</ul>` : ''}</div>`).join('')}</div>
 `;
 }
 function notesTab() {
@@ -672,7 +688,7 @@ function sourceTab() {
     <p class="sub" style="color:var(--muted)">Saved locally — opening it never calls Claude again.${unit.generation ? ` Generated by ${esc(unit.generation.model)} in ${Math.floor(unit.generation.seconds / 60)}m ${unit.generation.seconds % 60}s.` : ''}</p>
     ${unit.hint ? `<p><b>Note to Claude:</b> ${esc(unit.hint)}</p>` : ''}
     ${unit.images.map(i => `<img class="page-img" src="/files/${unit.id}/${i}">`).join('')}
-    ${unit.text ? `<pre class="src">${esc(unit.text)}</pre>` : ''}
+    ${unit.text ? `<pre class="src" dir="auto">${esc(unit.text)}</pre>` : ''}
   </div>`;
 }
 function renderPending() {
@@ -698,7 +714,7 @@ function renderPending() {
           ${pct != null ? `<div class="pbar"><div style="width:${pct}%"></div></div>` : ''}
           <p><small>${pr ? `${(pr.chars / 1000).toFixed(1)}k characters written so far — it's alive.` : 'Starting claude…'} A one-page dialog takes 1–4 min depending on the model.</small></p>` : ''}
         ${imgs}
-        ${unit.text ? `<pre class="src" style="text-align:left">${esc(unit.text)}</pre>` : ''}</div>`;
+        ${unit.text ? `<pre class="src" dir="auto">${esc(unit.text)}</pre>` : ''}</div>`;
       })();
 }
 
@@ -733,7 +749,7 @@ function renderComposer() {
       </div>
     </div>
     <label class="lb" for="txt">Text</label>
-    <textarea id="txt" placeholder="Paste any text here… · Вставьте текст · ここに貼り付け · Pega el texto · Cole o texto">${esc(draft.text)}</textarea>
+    <textarea id="txt" dir="auto" placeholder="Paste any text here… · Вставьте текст · ここに貼り付け · Pega el texto · Cole o texto">${esc(draft.text)}</textarea>
     <label class="lb" for="hint">Note for Claude <span style="font-weight:400;color:var(--muted)">(optional)</span></label>
     <input type="text" id="hint" placeholder="e.g. only the dialog on page 2 · focus on verbs of motion · I'm around A2 / N4" value="${esc(draft.hint)}">
     <label class="lb" for="lang">Language</label>
@@ -824,39 +840,46 @@ $('#camDlg').addEventListener('close', () => { stopCam(); view = 'compose'; rend
 
 /* ================= speech (server-side macOS voice) ================= */
 const audio = new Audio();
-let playQueue = [], playing = false;
-function setPlaying(on) {
-  playing = on;
-  const pb = $('#playAll'); if (pb) pb.textContent = on ? '■ Stop' : '▶ Play';
-  let bar = $('#playerBar');
-  if (on && !bar) {
-    bar = Object.assign(document.createElement('button'), { id: 'playerBar', className: 'primary', innerHTML: '■ Stop audio <small>(Esc)</small>' });
-    bar.onclick = stopAudio;
-    document.body.append(bar);
-  } else if (!on && bar) bar.remove();
+// What is playing: 'all' (toolbar Play), 'chunk:<pi>:<ci>' (a row's 🔊), 'guided' or 'word'. Controls show in place.
+let playQueue = [], playing = null, paused = false;
+function playSlotHTML() {
+  return playing
+    ? `<button id="pauseBtn" title="Pause / resume">${paused ? '▶ Go' : '❚❚ Pause'}</button><button id="stopBtn" title="Stop (Esc)">■ Stop</button>`
+    : `<button id="playAll" title="Play whole text">▶ Play all</button>`;
 }
-function stopAudio() { playQueue = []; audio.onended = null; audio.pause(); setPlaying(false); }
-audio.addEventListener('pause', () => { if (!playQueue.length && audio.ended !== false) setPlaying(false); });
-audio.addEventListener('error', () => { if (!playQueue.length) setPlaying(false); });
+function updateAudioUI() {
+  const slot = $('#playslot'); if (slot) slot.innerHTML = playSlotHTML();
+  document.querySelectorAll('[data-say-chunk]').forEach(b => { b.textContent = playing === 'chunk:' + b.dataset.sayChunk ? '■' : '🔊'; });
+  const g = $('#gSay'); if (g) g.textContent = playing === 'guided' ? '■ Stop' : '🔊 Listen';
+}
+function setPlaying(src) { playing = src; paused = false; updateAudioUI(); }
+function stopAudio() { playQueue = []; audio.onended = null; audio.pause(); setPlaying(null); }
+function togglePause() {
+  if (!playing) return;
+  if (audio.paused) { audio.play().catch(() => {}); paused = false; } else { audio.pause(); paused = true; }
+  updateAudioUI();
+}
+audio.addEventListener('error', () => { if (!playQueue.length) setPlaying(null); });
 // Dialog speakers alternate between a female and a male voice.
 function voiceFor(speaker) {
   if (!speaker || !unit) return 'female';
   const names = [...new Set(unit.sentences.map(s => s.speaker).filter(Boolean))];
   return names.indexOf(speaker) % 2 ? 'male' : 'female';
 }
-function speak(text, onend, voice) {
-  audio.onended = onend || (() => setPlaying(false));
+function speak(text, onend, voice, src = 'word') {
+  audio.onended = onend || (() => setPlaying(null));
   audio.src = `/api/tts?text=${encodeURIComponent(text)}&voice=${voice || 'female'}&lang=${encodeURIComponent(unit?.language || 'ru')}`;
   audio.preservesPitch = true;
   audio.playbackRate = state.slowAudio ? 0.75 : 1;
-  setPlaying(true);
-  audio.play().catch(() => setPlaying(false));
+  if (playing !== src) setPlaying(src);
+  audio.play().catch(() => setPlaying(null));
 }
 // Always play per sentence so every clip is cached once and reused everywhere.
 function sentenceClips(idx) { return idx.map(i => ({ text: unit.sentences[i].text, voice: voiceFor(unit.sentences[i].speaker) })); }
-function speakAll(items) {
+function speakAll(items, src) {
+  stopAudio();
   playQueue = [...items];
-  const next = () => { const t = playQueue.shift(); if (t) speak(t.text, next, t.voice); else setPlaying(false); };
+  const next = () => { const t = playQueue.shift(); if (t) speak(t.text, next, t.voice, src); else setPlaying(null); };
   next();
 }
 
@@ -870,8 +893,8 @@ document.addEventListener('click', async e => {
   if ((el = c('[data-tog]'))) { state[el.dataset.tog] = !state[el.dataset.tog]; if (el.dataset.tog === 'showEn') revealedParas.clear(); saveState(); return render(); }
   if (t.id === 'glossBtn') { state.gloss = ({ off: 'meaning', meaning: 'full', full: 'off' })[state.gloss]; saveState(); return render(); }
   if (t.id === 'fsUp' || t.id === 'fsDown') { state.fontScale = Math.max(.7, Math.min(1.8, +(state.fontScale + (t.id === 'fsUp' ? .1 : -.1)).toFixed(2))); saveState(); applyFont(); const fv = $('.fs-val'); if (fv) fv.textContent = Math.round(state.fontScale * 100) + '%'; return; }
-  if ((el = c('[data-sayt]'))) return speak(el.dataset.sayt);
-  if ((el = c('[data-say-chunk]'))) { const [pi, ci] = el.dataset.sayChunk.split(':'); return speakAll(sentenceClips(unit.paras[pi].chunks[ci])); }
+  if ((el = c('[data-sayt]'))) { playQueue = []; return speak(el.dataset.sayt); }
+  if ((el = c('[data-say-chunk]'))) { const key = el.dataset.sayChunk, [pi, ci] = key.split(':'); if (playing === 'chunk:' + key) return stopAudio(); return speakAll(sentenceClips(unit.paras[pi].chunks[ci]), 'chunk:' + key); }
   if ((el = c('[data-en-chunk]'))) { const k = el.dataset.enChunk; revealedParas.has(k) ? revealedParas.delete(k) : revealedParas.add(k); return render(); }
   if ((el = c('[data-guide]'))) { gIdx = +el.dataset.guide; gOpen.clear(); gClosed.clear(); state.tab = 'guided'; saveState(); return render(); }
   if ((el = c('[data-learn]'))) { toggleIn('learned', +el.dataset.learn); return render(); }
@@ -884,10 +907,12 @@ document.addEventListener('click', async e => {
   }
   if ((el = c('[data-p]'))) { sel = { type: 'phrase', p: +el.dataset.p }; render(); $('#detail').scrollTo({ top: 0, behavior: 'smooth' }); return; }
   switch (t.id) {
-    case 'playAll': if (playing) return stopAudio(); return speakAll(sentenceClips(unit.paras.filter(p => p.kind !== 'note').flatMap(p => p.idx)));
+    case 'playAll': return speakAll(sentenceClips(unit.paras.filter(p => p.kind !== 'note').flatMap(p => p.idx)), 'all');
+    case 'pauseBtn': return togglePause();
+    case 'stopBtn': return stopAudio();
     case 'gPrev': return goSentence(gIdx - 1);
     case 'gNext': return goSentence(gIdx + 1);
-    case 'gSay': return speak(unit.sentences[gIdx].text, null, voiceFor(unit.sentences[gIdx].speaker));
+    case 'gSay': if (playing === 'guided') return stopAudio(); return speakAll(sentenceClips([gIdx]), 'guided');
     case 'gAll': state.guidedAll = !state.guidedAll; gOpen.clear(); gClosed.clear(); saveState(); return render();
     case 'gDone': toggleIn('done', gIdx); return render();
     case 'camBtn': return openCam();
@@ -935,7 +960,7 @@ document.addEventListener('keydown', e => {
     if (k === 'ArrowRight') goSentence(gIdx + 1);
     else if (k === 'ArrowLeft') goSentence(gIdx - 1);
     else if (k === ' ') { e.preventDefault(); $('#gAll')?.click(); }
-    else if (k === 'r') speak(unit.sentences[gIdx].text, null, voiceFor(unit.sentences[gIdx].speaker));
+    else if (k === 'r') speakAll(sentenceClips([gIdx]), 'guided');
     else if (k === 'Enter') { if (!has(prog().done, gIdx)) toggleIn('done', gIdx); goSentence(gIdx + 1); }
     else return;
     e.preventDefault();

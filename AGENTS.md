@@ -68,8 +68,11 @@ URL, model) in `DEFAULTS` in `config.js` and document them in `env.example.yml` 
 ### Change or add a language
 - Prompt: add an entry to `LANG_GUIDE` in `extract.js` (word segmentation, what `reading`/`translit` hold,
   what `form` should say, which tables to produce, level scale).
-- UI: add it to `LANGS` in `public/index.html` (`reading: 'inline' | 'ruby' | null`, toggle label, `translit`)
-  and to the language `<select>` in the composer.
+- UI: add it to `LANGS` in `public/index.html` (`reading: 'inline'` = the same word plus combining marks, such as stress or vowels;
+  `'ruby'` = furigana-style annotation; `null` = none; also the toggle label, `translit`, `translitInMeaning`, `dir: 'rtl'`),
+  add a flag to `FLAGS`, and add it to the language `<select>` in the composer. Right-to-left scripts need `dir: 'rtl'` (sentence blocks get
+  `dir="rtl"`; English glosses inside them are forced to `dir="ltr"`). For script-specific fonts or sizes, add a `#app[data-lang=xx]` CSS rule
+  that sets `--tl-font` / `--tlz`.
 - TTS: ElevenLabs multilingual handles most languages; `say` picks an installed voice by locale automatically.
 
 ### Swap the TTS provider

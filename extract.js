@@ -114,6 +114,17 @@ const LANG_GUIDE = {
 - structure: explain ser vs estar, clitic placement, personal infinitive, subjunctive triggers, dropped subjects.
 - tables: conjugations of key verbs (present, pretérito perfeito, imperfeito, future, present subjunctive, as relevant).
 - level: CEFR.`,
+  ar: `ARABIC
+- Keep the text exactly as printed (usually without short vowels). Attached clitics (و، ف، ب، ل، ك، the article ال, and object/possessive suffixes like ـه، ـها، ـهم) stay part of the word they are written with; form explains the pieces (e.g. "و (and) + ال (the) + noun, genitive").
+- words[].reading: the fully vocalized word (with tashkeel/harakat, including case endings as pronounced in careful MSA). words[].translit: a readable romanization (e.g. "wa-l-duwal"). lemma: the dictionary form, vocalized.
+- form: the root (e.g. "root ك-ت-ب"), the verb form (I–X) or noun pattern, tense/mood, person/gender/number, case/state (definite, construct/iḍāfa), broken vs sound plural.
+- structure: explain VSO vs SVO order, iḍāfa, nominal sentences without "to be", agreement rules (incl. non-human plurals taking feminine singular), and particles like إنّ / أنّ / لم / لن.
+- tables: conjugations of key verbs (past and present by person) and the plurals/declension of key nouns and adjectives, vocalized.
+- level: CEFR. Say if the text is MSA or a dialect in summary_en, not in level.`,
+  he: `HEBREW
+- Prefixed particles (ו، ה، ב، ל، מ، ש، כ) stay part of the word they are written with; form explains the pieces.
+- words[].reading: the word with niqqud (vowel points). words[].translit: romanization. lemma: dictionary form with niqqud; for verbs give the root and binyan.
+- form: root, binyan/mishkal, tense, person/gender/number, construct state (smichut). tables: key verb conjugations. level: CEFR.`,
 };
 const GENERIC_GUIDE = `OTHER LANGUAGE
 - words[].reading: a pronunciation aid only if the script does not show pronunciation well (e.g. tone marks, vowel points); otherwise omit. words[].translit: romanization only for non-Latin scripts.
@@ -136,7 +147,7 @@ Treat all sources together as ONE continuous reading (a sentence broken across a
 
 OUTPUT FIELDS
 - language: BCP-47 code of the reading (e.g. "ru", "ja", "es", "pt-BR", "pt-PT").
-- title: the heading in the original language (make one up if none). title_en: English title. level: the learner level of the text. kind: dialog, prose or mixed. summary_en: 1–2 sentences.
+- title: the heading in the original language (make one up if none). title_en: English title. level: the learner level of the text as a SHORT code only (e.g. "A1", "B2", "B2–C1", "N4"), with no commentary. kind: dialog, prose or mixed. summary_en: 1–2 sentences.
 - sentences: the whole text split into individual sentences, in order.
   - para: groups sentences for display — the paragraph index for prose, or the turn index for dialog (all sentences of one speaker turn share a para).
   - speaker: the speaker's name for dialog lines (omit for prose). kind: "heading" for titles, "note" for stage directions, else "text".

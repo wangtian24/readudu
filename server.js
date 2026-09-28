@@ -106,7 +106,13 @@ async function processUnit(id) {
 }
 
 // Speech: ElevenLabs (tts_provider: elevenlabs + elevenlabs_api_key in env.yml), else macOS `say`.
-const ELEVEN_VOICES = { female: config.elevenlabs_voice_female, male: config.elevenlabs_voice_male };
+// A native voice per language sounds far better than an English voice speaking French/Arabic; see env.example.yml.
+function elevenVoice(lang, gender) {
+  const g = gender === 'male' ? 'male' : 'female';
+  return config[`elevenlabs_voice_${lang}_${g}`] || config[`elevenlabs_voice_${lang}`] || config[`elevenlabs_voice_${g}`];
+}
+// Concurrent requests for the same clip (the browser can ask twice) share one generation, so it's paid once.
+const inflight = new Map();
 // Every clip is generated once and kept in data/tts; index.jsonl records what each file says.
 function logClip(file, meta) {
   fs.appendFileSync(path.join(TTS, 'index.jsonl'), JSON.stringify({ file: path.basename(file), ...meta, created: new Date().toISOString() }) + '\n');
@@ -114,13 +120,19 @@ function logClip(file, meta) {
 async function elevenSpeech(text, voice, lang) {
   const key = config.elevenlabs_api_key;
   if (config.tts_provider !== 'elevenlabs' || !key) return null;
-  const voiceId = ELEVEN_VOICES[voice] || ELEVEN_VOICES.female;
+  const voiceId = elevenVoice(lang, voice);
   const model = config.elevenlabs_model;
   const speed = 0.95; // slow playback is done in the browser, so each text is paid for once
   // Russian keeps the original cache key so clips made before multi-language support are reused.
   const hash = crypto.createHash('sha1').update(['el', voiceId, model, speed, ...(lang === 'ru' ? [] : [lang]), text].join('|')).digest('hex');
   const out = path.join(TTS, hash + '.mp3');
   if (fs.existsSync(out)) return out;
+  if (inflight.has(out)) return inflight.get(out);
+  const job = elevenFetch(out, key, voiceId, model, speed, text, lang, voice).finally(() => inflight.delete(out));
+  inflight.set(out, job);
+  return job;
+}
+async function elevenFetch(out, key, voiceId, model, speed, text, lang, voice) {
   const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_128`, {
     method: 'POST',
     headers: { 'xi-api-key': key, 'Content-Type': 'application/json' },

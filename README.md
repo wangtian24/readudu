@@ -7,7 +7,7 @@
 Snap a photo of a textbook page (or several), or paste a paragraph. Readudu builds a reading unit with
 sentence-by-sentence translation, a gloss for every word, grammar and structure explanations,
 conjugation tables, cultural notes and native-sounding audio. It works for Russian, Japanese,
-Spanish and Portuguese out of the box, and other languages also work reasonably well.
+Spanish, Portuguese and Arabic out of the box (right-to-left scripts included), and other languages also work reasonably well.
 
 It runs entirely on your machine. The AI work is done by your local
 [Claude Code](https://claude.com/claude-code) CLI (`claude -p`), so no Anthropic API key is needed.
@@ -19,7 +19,7 @@ Your photos, lessons and progress stay in a local folder.
 - **Read**: the text sentence by sentence, with per-sentence English, audio and "guide me from here". Click any word to see its dictionary form, grammatical form and meaning.
   - **Gloss** mode puts the meaning (and optionally dictionary form, grammar and romanization) under every word.
   - **Colors** color-codes words by part of speech.
-  - The reading aid shows **stress marks** for Russian and **furigana** for Japanese.
+  - The reading aid shows **stress marks** for Russian, **furigana** for Japanese, and **vowel marks** (tashkeel/niqqud) for Arabic and Hebrew. Arabic-script languages also show transliteration under each word.
 - **Guided**: one sentence at a time, with the translation (natural + literal), a word-by-word table, sentence structure, "Did you know?" anecdotes and inflection tables. Open sections one by one or turn on "Show all" (remembered), and mark sentences as understood.
 - **Vocabulary / Grammar / Notes**: key phrases with learned tracking, a glossary of every word, grammar notes, culture notes.
 - **Audio**: ElevenLabs (multilingual, two voices for dialog) or the macOS built-in voices. Every clip is generated once and cached.
@@ -56,6 +56,7 @@ Any key can also be set as an upper-case environment variable (e.g. `ELEVENLABS_
 | `tts_provider` | `elevenlabs` | `elevenlabs`, `say` (macOS voices) or `none` |
 | `elevenlabs_api_key` | — | needs the text-to-speech permission |
 | `elevenlabs_model`, `elevenlabs_voice_female`, `elevenlabs_voice_male` | multilingual v2, Sarah, George | voices used for audio |
+| `elevenlabs_voice_<lang>[_female\|_male]` | — | optional native voice per language, e.g. `elevenlabs_voice_fr` (the defaults are English voices and carry an accent) |
 
 Without an ElevenLabs key, audio falls back to macOS `say`. For better quality, install
 Premium/Enhanced voices in *System Settings → Accessibility → Spoken Content → Manage Voices*.

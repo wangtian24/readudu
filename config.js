@@ -44,6 +44,10 @@ function load() {
     const v = env ?? fromFile[k];
     if (v !== undefined && v !== '') cfg[k] = typeof DEFAULTS[k] === 'number' ? Number(v) : v;
   }
+  // Per-language voices: elevenlabs_voice_<lang>, elevenlabs_voice_<lang>_female / _male (e.g. elevenlabs_voice_fr_female).
+  const extra = { ...fromFile };
+  for (const [k, v] of Object.entries(process.env)) extra[k.toLowerCase()] = v;
+  for (const [k, v] of Object.entries(extra)) if (/^elevenlabs_voice_[a-z]{2,3}(_(female|male))?$/.test(k) && v) cfg[k] = v;
   cfg.data_dir = path.resolve(root, cfg.data_dir);
   return cfg;
 }
