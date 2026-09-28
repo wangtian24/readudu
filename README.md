@@ -15,50 +15,53 @@ Your photos, lessons and progress stay in a local folder.
 
 ## A quick tour
 
-### Snap the pages
+### 1. Snap the pages
 ![Multi-page webcam capture](docs/screenshots/01-camera-capture.jpg)
 *Hold the book up to your webcam and press Space for each page. The preview is mirrored so it's easy to line up, and
-saved photos are not mirrored. Captured pages collect in the strip below, and several pages become one reading. You can
-also upload photos, drag and drop, or paste text.*
+saved photos are not mirrored. Several pages become one reading. You can also upload photos, drag and drop, or paste text.*
 
-### One Claude call builds the whole lesson
+### 2. One Claude call builds the whole lesson
 ![Generation progress](docs/screenshots/02-generating.jpg)
 *A single `claude -p` run reads the pages and writes the whole unit. You can watch its progress step by step and stop it
 at any time. The result is saved locally, so opening it again costs nothing.*
 
-### Read, with a gloss under every word
-![Russian dialog in the Read view with full glosses](docs/screenshots/03-read-gloss.jpg)
-*A Russian textbook dialog, from a single phone photo of the page. **Gloss: full** puts the meaning, dictionary form
-and grammar (case, aspect, tense) under every word. Stress marks show where to put the accent, and each line has its own
-English translation. The key phrases on the right are highlighted in the text and can be marked as learned.*
+### 3. Read, with the meaning under every word
+![Russian dialog with word meanings](docs/screenshots/03-read-meaning.jpg)
+*The page becomes clean, large text, one sentence per row, with speakers for dialogs. **Gloss: meaning** puts a short
+English meaning under each word, and stress marks show how to pronounce it. Each row can reveal its translation (EN),
+play audio, or start guided reading from that line (›).*
 
-### Guided reading, one sentence at a time
-![Guided mode showing translation, word-by-word table, structure and a note](docs/screenshots/04-guided.jpg)
-*Guided mode steps through the reading sentence by sentence. Each sentence shows a natural and a literal translation,
-a word-by-word table, how the sentence is built, and a "Did you know?" note. Here it explains that новость, unlike English
-"news", can be counted. The dots track progress, and "Show all" is remembered between sentences.*
+### 4. Go deeper: grammar for every word
+![Full glosses with grammar](docs/screenshots/04-read-full-gloss.jpg)
+*Switch to **Gloss: full** for the dictionary form and grammar of each word (case, number, aspect, tense), with
+**Colors** marking parts of speech. Click any word for details. Key phrases are highlighted in the text and listed on the right.*
 
-### Works for advanced texts too
-![A C1 French newspaper article with glosses](docs/screenshots/05-french-gloss.jpg)
-*A C1-level Le Monde article, pasted as text. Articles, elisions (d', l') and contractions (du = de + le) are all glossed.
+### 5. Guided reading, one sentence at a time
+![Guided mode](docs/screenshots/05-guided.jpg)
+*Step through the text sentence by sentence. Each sentence has a natural and a literal translation, a word-by-word table,
+an explanation of how the sentence is built, and a "Did you know?" note. Here it explains that новость, unlike English
+"news", can be counted. Mark sentences as understood as you go.*
+
+### 6. Study the vocabulary
+![Vocabulary tab](docs/screenshots/06-vocabulary.jpg)
+*Each reading gets 15–35 key phrases and idioms with explanations and fresh example sentences. You can mark them learned
+and filter to what's left. A glossary of every word in the text sits below.*
+
+### 7. Understand the context
+![Culture notes](docs/screenshots/07-culture-notes.jpg)
+*Culture notes explain the people, places and customs the text mentions, and the style and register it's written in.*
+
+### 8. Any language, any level
+![C1 French newspaper article](docs/screenshots/08-french.jpg)
+*The same works for a C1 Le Monde article pasted as text, with elisions (d', l') and contractions (du = de + le) glossed.
 The sidebar filters readings by language and shows each unit's generation cost and time.*
 
-### Right-to-left scripts: Arabic
-![Arabic news text with full vowel marks](docs/screenshots/06-arabic-vowels.jpg)
-*Arabic reads right to left in a larger sans-serif font. **Vowels** adds the full tashkeel to the printed text.*
+![Arabic with vowel marks](docs/screenshots/09-arabic-vowels.jpg)
+*Right-to-left scripts work too. Arabic is shown in a larger sans-serif font, and **Vowels** adds the full tashkeel.*
 
-![Arabic text with transliteration and root/pattern glosses](docs/screenshots/07-arabic-gloss.jpg)
-*In gloss mode every Arabic word gets a transliteration, its meaning and its grammar: the root, verb form (Form III, Form VIII…),
-broken plurals, case, and iḍāfa constructions. Attached prefixes like و and ال are explained as part of the word.*
-
-### Vocabulary cards
-![Vocabulary tab with key phrase cards](docs/screenshots/08-vocabulary.jpg)
-*Every reading gets 15–35 key phrases and idioms, each with an explanation and fresh example sentences. You can
-filter them to what's left to learn. A glossary of every word in the text sits below.*
-
-### Culture notes
-![Notes tab with culture notes about the French article](docs/screenshots/09-culture-notes.jpg)
-*Background that makes the text make sense: the people, places and customs it mentions, plus notes on style and register.*
+![Arabic glosses](docs/screenshots/10-arabic-gloss.jpg)
+*In gloss mode, each Arabic word gets a transliteration, its meaning, and grammar: the root, verb form (Form III, VIII…),
+broken plurals, case and iḍāfa. Attached prefixes like و and ال are explained as part of the word.*
 
 ## Features
 
