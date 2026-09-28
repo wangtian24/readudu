@@ -360,11 +360,18 @@ function prepare(u) {
     s.toks = toks;
     s.ranges = [];
   });
+  // Models sometimes get the sentence index slightly wrong (e.g. off by one), so if the phrase isn't in
+  // the given sentence, use the nearest sentence that contains it.
+  const find = (s, t) => { const at = s.text.indexOf(t); return at >= 0 ? at : s.text.toLowerCase().indexOf(t.toLowerCase()); };
   u.phrases.forEach((p, pi) => (p.occurrences || []).forEach(o => {
-    const s = u.sentences[o.s]; if (!s || !o.text) return;
-    let at = s.text.indexOf(o.text);
-    if (at < 0) at = s.text.toLowerCase().indexOf(o.text.toLowerCase());
-    if (at >= 0) s.ranges.push({ a: at, b: at + o.text.length, pi });
+    if (!o.text) return;
+    const order = u.sentences.map((_, i) => i).sort((x, y) => Math.abs(x - o.s) - Math.abs(y - o.s));
+    for (const i of order) {
+      const s = u.sentences[i], at = find(s, o.text);
+      if (at < 0) continue;
+      if (!s.ranges.some(r => r.a === at && r.pi === pi)) s.ranges.push({ a: at, b: at + o.text.length, pi });
+      break;
+    }
   }));
   u.sentences.forEach(s => s.ranges.sort((x, y) => (y.b - y.a) - (x.b - x.a))); // longest first
   u.paras = [];
