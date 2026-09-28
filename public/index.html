@@ -34,7 +34,9 @@ button:disabled { opacity: .5; cursor: default; }
 .app { display: grid; grid-template-columns: 250px 1fr 400px; height: 100vh; }
 .app.no-detail { grid-template-columns: 250px 1fr; }
 .app.no-detail .detail { display: none; }
-aside, main, .detail { overflow-y: auto; }
+main, .detail { overflow-y: auto; }
+/* Sidebar: logo, New button and language filter stay put; only the unit list scrolls. */
+aside { overflow: hidden; min-height: 0; }
 aside { border-right: 1px solid var(--line); padding: 16px; display: flex; flex-direction: column; gap: 12px; font-size: 14px; }
 aside button { font-size: 14px; }
 .detail { border-left: 1px solid var(--line); padding: 20px; background: var(--panel); }
@@ -47,7 +49,7 @@ h1 { font-size: 18px; margin: 0; }
 .units .c { font-size: 11px; color: var(--muted); opacity: .75; margin-top: 1px; }
 .units .fl { font-size: 13px; margin-right: 4px; }
 .lbadge { display: inline-block; font: 600 9px/14px -apple-system, system-ui, sans-serif; letter-spacing: .03em; padding: 0 3px; border-radius: 3px; background: var(--line); color: var(--ink); vertical-align: 2px; }
-.units { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.units { list-style: none; margin: 0 -6px; padding: 0 6px; display: flex; flex-direction: column; gap: 4px; flex: 1; min-height: 0; overflow-y: auto; }
 .units li { padding: 8px 10px; border-radius: 8px; cursor: pointer; }
 .units li:hover { background: var(--panel); }
 .units li.active { background: var(--panel); outline: 1px solid var(--line); }
@@ -229,7 +231,8 @@ ruby rt { font-size: .5em; color: var(--muted); font-weight: 400; }
 
 @media (max-width: 1150px) {
   .app, .app.no-detail { grid-template-columns: 1fr; height: auto; }
-  aside { border-right: 0; border-bottom: 1px solid var(--line); }
+  aside { border-right: 0; border-bottom: 1px solid var(--line); overflow: visible; }
+  .units { overflow: visible; }
   .detail { border-left: 0; border-top: 1px solid var(--line); }
   main { padding: 0 16px 40px; }
   .para, .para.prose { grid-template-columns: 1fr auto; }
@@ -244,7 +247,7 @@ ruby rt { font-size: .5em; color: var(--muted); font-weight: 400; }
     <button class="primary" id="newBtn">＋ New reading</button>
     <div class="lfilter" id="lfilter"></div>
     <ul class="units" id="units"></ul>
-    <div style="margin-top:auto;color:var(--muted);font-size:.75rem">Drop or paste images / text anywhere.</div>
+    <div style="flex-shrink:0;color:var(--muted);font-size:.75rem">Drop or paste images / text anywhere.</div>
   </aside>
   <main id="main"></main>
   <section class="detail" id="detail"></section>
